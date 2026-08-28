@@ -1,0 +1,2 @@
+Placeholder. Drop a real PDF at this path (public/resume.pdf) and the
+command palette "Download resume" action will serve it.

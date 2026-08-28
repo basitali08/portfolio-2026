@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BASIT ALI — Data Scientist · AI Engineer</title>
+<meta name="description" content="Basit Ali — Data Scientist & AI Engineer. Building intelligent systems that transform raw data into production-ready ML solutions." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@100;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --acid: #D2FF00;
+  --black: #111112;
+  --black-2: #0a0a0b;
+  --black-3: #18181a;
+  --line: rgba(210, 255, 0, 0.18);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+*::selection { background: var(--acid); color: var(--black); }
+html, body {
+  background: var(--black);
+  color: #fff;
+  font-family: "Barlow Condensed", "Inter", system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  overflow-x: hidden;
+  cursor: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a, button { color: inherit; text-decoration: none; cursor: none; }
+button { background: none; border: none; font: inherit; }
+img { display: block; max-width: 100%; }
+
+/* ─── Noise overlay ─── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.6'/></svg>");
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+}
+
+/* ─── Custom cursor ─── */
+.cursor {
+  position: fixed;
+  top: 0; left: 0;
+  width: 24px; height: 24px;
+  border: 1.5px solid var(--acid);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  transition: width 0.25s ease, height 0.25s ease, background 0.25s ease, border-color 0.25s ease, opacity 0.25s;
+  mix-blend-mode: difference;
+}
+.cursor.hover { width: 80px; height: 80px; background: rgba(210, 255, 0, 0.15); }
+.cursor.dot { width: 6px; height: 6px; background: var(--acid); border-color: var(--acid); }
+.cursor.hide { opacity: 0; }
+
+/* ─── Loader ─── */
+.loader {
+  position: fixed;
+  inset: 0;
+  background: var(--black);
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 24px;
+}
+.loader .bar { width: 220px; height: 1px; background: rgba(255,255,255,0.1); position: relative; overflow: hidden; }
+.loader .bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--acid);
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: loadFill 1.4s ease-out forwards;
+}
+@keyframes loadFill { to { transform: scaleX(1); } }
+.loader .label { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--acid); }
+.loader.go { pointer-events: none; }
+.loader.go .label { opacity: 0; transition: opacity 0.4s; }
+.loader.go { animation: loaderOut 1s ease-in 1.2s forwards; }
+@keyframes loaderOut {
+  to { transform: translateY(-100%); }
+}
+
+/* ─── Nav ─── */
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  padding: 22px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  transition: background 0.4s, padding 0.4s, border-color 0.4s;
+  border-bottom: 1px solid transparent;
+}
+.nav.scrolled {
+  background: rgba(17, 17, 18, 0.7);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-color: var(--line);
+  padding: 14px 40px;
+}
+.nav .logo {
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  display: flex; align-items: center; gap: 10px;
+}
+.nav .logo .mark {
+  width: 26px; height: 26px;
+  background: var(--acid);
+  display: grid; place-items: center;
+  color: var(--black);
+  font-weight: 900;
+  font-size: 13px;
+}
+.nav .menu { display: flex; gap: 36px; align-items: center; }
+.nav .menu a {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  position: relative;
+  padding: 6px 0;
+}
+.nav .menu a::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1.5px;
+  background: var(--acid);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.7, 0, 0.3, 1);
+}
+.nav .menu a:hover::after { transform: scaleX(1); transform-origin: left; }
+.nav .cta {
+  background: var(--acid);
+  color: var(--black);
+  padding: 10px 22px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-radius: 100px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.nav .cta:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(210, 255, 0, 0.6); }
+
+/* ─── Marquee ─── */
+.marquee {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 90;
+  background: var(--acid);
+  color: var(--black);
+  padding: 10px 0;
+  overflow: hidden;
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  border-top: 1px solid var(--acid);
+  transform: translateY(100%);
+  transition: transform 0.6s cubic-bezier(0.7, 0, 0.3, 1);
+}
+.marquee.show { transform: translateY(0); }
+.marquee .track {
+  display: flex;
+  gap: 48px;
+  width: max-content;
+  animation: scroll 28s linear infinite;
+}
+.marquee span { display: inline-flex; align-items: center; gap: 16px; }
+.marquee span::before { content: "//"; opacity: 0.5; }
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ─── Sections base ─── */
+section { position: relative; }
+
+/* ─── Hero ─── */
+.hero {
+  min-height: 100svh;
+  padding: 120px 40px 80px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: center;
+  gap: 60px;
+  position: relative;
+  overflow: hidden;
+}
+.hero .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--line);
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--acid);
+  margin-bottom: 24px;
+}
+.hero .badge .pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--acid); box-shadow: 0 0 12px var(--acid); animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+.hero .number {
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 900;
+  font-size: clamp(120px, 22vw, 320px);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.08);
+  position: absolute;
+  top: 80px; right: 40px;
+  pointer-events: none;
+  user-select: none;
+}
+.hero .name {
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 900;
+  font-size: clamp(80px, 16vw, 240px);
+  line-height: 0.85;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  position: relative;
+}
+.hero .name .row { display: block; overflow: hidden; }
+.hero .name .row span { display: inline-block; transform: translateY(110%); }
+.hero .name .row.acid span { color: var(--acid); }
+.hero .sub {
+  max-width: 520px;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 36px;
+}
+.hero .sub strong { color: var(--acid); font-weight: 500; }
+.hero .ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 32px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+}
+.btn-pill.primary {
+  background: var(--acid);
+  color: var(--black);
+}
+.btn-pill.primary:hover { transform: scale(1.06); box-shadow: 0 0 40px rgba(210, 255, 0, 0.5); }
+.btn-pill.ghost {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.btn-pill.ghost:hover { border-color: var(--acid); color: var(--acid); }
+
+.hero .loc {
+  margin-top: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+.hero .loc::before { content: ""; width: 6px; height: 6px; background: var(--acid); border-radius: 50%; }
+
+.hero-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 600px;
+  margin-left: auto;
+}
+.hero-stage canvas { display: block; width: 100%; height: 100%; }
+.hero-stage .ring {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  pointer-events: none;
+}
+.hero-stage .ring.r2 { inset: -32px; border-color: rgba(210, 255, 0, 0.08); animation: spin 22s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.hero-stage .meta {
+  position: absolute;
+  bottom: 12px; left: 12px; right: 12px;
+  display: flex;
+  justify-content: space-between;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(17, 17, 18, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--line);
+  padding: 10px 14px;
+}
+.hero-stage .meta b { color: var(--acid); }
+
+/* ─── Section heading helper ─── */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 64px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+}
+.section-head .num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  color: var(--acid);
+  text-transform: uppercase;
+}
+.section-head .title {
+  font-weight: 800;
+  font-size: clamp(40px, 7vw, 100px);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+.section-head .title em { color: var(--acid); font-style: normal; }
+.section-head .tag {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: right;
+}
+
+/* ─── Stats ─── */
+.stats {
+  padding: 120px 40px;
+  border-top: 1px solid var(--line);
+}
+.stats .grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.stat {
+  padding: 48px 32px;
+  border-right: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+}
+.stat:last-child { border-right: none; }
+.stat .num {
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 900;
+  font-size: clamp(60px, 9vw, 140px);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--acid);
+  display: block;
+  margin-bottom: 12px;
+}
+.stat .lbl {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+.stat .bg-num {
+  position: absolute;
+  bottom: -20px; right: -10px;
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 900;
+  font-size: 180px;
+  line-height: 1;
+  color: rgba(210, 255, 0, 0.04);
+  pointer-events: none;
+}
+
+/* ─── Gallery (Projects) ─── */
+.gallery {
+  padding: 120px 40px;
+  border-top: 1px solid var(--line);
+}
+.gallery .grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 18px;
+}
+.card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--black-2);
+  aspect-ratio: 4 / 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: none;
+}
+.card.featured { grid-row: span 2; aspect-ratio: 4 / 7; }
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--acid);
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+  z-index: 1;
+}
+.card:hover::before { opacity: 0.4; }
+.card:hover { transform: scale(1.01); }
+.card .img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(210, 255, 0, 0.18), transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.04), transparent 50%),
+    linear-gradient(135deg, var(--black-2), var(--black-3));
+  transform: scale(1);
+  transition: transform 0.6s;
+}
+.card:hover .img { transform: scale(1.05); }
+.card .meta {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--acid);
+}
+.card h3 {
+  position: relative;
+  z-index: 2;
+  font-weight: 900;
+  font-size: clamp(22px, 2vw, 32px);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  margin-top: auto;
+  transition: color 0.3s;
+}
+.card:hover h3 { color: var(--black); }
+.card .tags {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+.card .tags span {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 100px;
+  color: rgba(255, 255, 255, 0.7);
+  transition: border-color 0.3s, color 0.3s;
+}
+.card:hover .tags span { border-color: var(--black); color: var(--black); }
+.card .arrow {
+  position: absolute;
+  top: 24px; right: 24px;
+  z-index: 2;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  display: grid; place-items: center;
+  background: var(--black);
+  transition: background 0.3s, color 0.3s, transform 0.3s;
+}
+.card:hover .arrow { background: var(--black); color: var(--acid); transform: rotate(-45deg); }
+.card .accuracy {
+  position: absolute;
+  top: 24px; left: 24px;
+  z-index: 2;
+  background: var(--acid);
+  color: var(--black);
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  padding: 4px 12px;
+}
+
+/* ─── About ─── */
+.about {
+  padding: 140px 40px;
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 80px;
+}
+.about .photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: linear-gradient(135deg, var(--black-2), var(--black-3));
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.about .photo img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: grayscale(100%) contrast(1.05);
+  transition: filter 0.6s, transform 0.6s;
+}
+.about .photo:hover img { filter: grayscale(0%) contrast(1.1); transform: scale(1.04); }
+.about .photo::after {
+  content: "BASIT ALI · 2026";
+  position: absolute;
+  bottom: 16px; left: 16px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--acid);
+  background: var(--black);
+  padding: 4px 10px;
+}
+.about .photo .tape {
+  position: absolute;
+  top: 20px; right: -20px;
+  transform: rotate(8deg);
+  background: var(--acid);
+  color: var(--black);
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  padding: 6px 18px;
+}
+.about .text h2 {
+  font-weight: 800;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+.about .text h2 em { color: var(--acid); font-style: normal; }
+.about .text p {
+  font-size: 17px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 18px;
+  font-weight: 300;
+}
+.about .text p strong { color: #fff; font-weight: 500; }
+.about .text .quote {
+  border-left: 2px solid var(--acid);
+  padding: 8px 0 8px 18px;
+  margin: 24px 0;
+  font-style: italic;
+  color: var(--acid);
+  font-size: 18px;
+  font-weight: 300;
+}
+.about .text .pubs {
+  margin-top: 40px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  background: var(--black-2);
+}
+.about .text .pubs .phead {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.about .text .pubs .phead span {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  color: var(--acid);
+}
+.about .text .pubs h3 {
+  font-weight: 800;
+  font-size: 20px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+.about .text .pubs p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 12px;
+}
+.about .text .pubs a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--black);
+  background: var(--acid);
+  padding: 10px 18px;
+  border-radius: 100px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  margin-right: 8px;
+}
+.about .text .pubs a:hover { transform: scale(1.05); box-shadow: 0 0 24px rgba(210, 255, 0, 0.5); }
+
+/* ─── CTA ─── */
+.cta {
+  padding: 160px 40px;
+  border-top: 1px solid var(--line);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta h2 {
+  font-weight: 900;
+  font-size: clamp(60px, 13vw, 220px);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  margin-bottom: 36px;
+}
+.cta h2 em { color: var(--acid); font-style: normal; }
+.cta .email {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 18px;
+  color: var(--acid);
+  margin-bottom: 40px;
+  display: inline-block;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 6px;
+}
+
+/* ─── Footer ─── */
+.footer {
+  padding: 40px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+.footer a:hover { color: var(--acid); }
+.footer .socials { display: flex; gap: 20px; }
+
+/* ─── Clip reveal ─── */
+.reveal { overflow: hidden; }
+.reveal span { display: inline-block; transform: translateY(110%); }
+
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; padding: 110px 24px 60px; }
+  .hero .number { font-size: 100px; right: 24px; top: 90px; }
+  .stats .grid { grid-template-columns: repeat(2, 1fr); }
+  .stat:nth-child(2n) { border-right: none; }
+  .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+  .gallery .grid { grid-template-columns: 1fr; }
+  .card.featured { grid-row: auto; aspect-ratio: 4/5; }
+  .about { grid-template-columns: 1fr; gap: 40px; padding: 80px 24px; }
+  .nav { padding: 16px 20px; }
+  .nav.scrolled { padding: 10px 20px; }
+  .nav .menu { display: none; }
+  .stats, .gallery, .cta { padding: 80px 24px; }
+  .footer { flex-direction: column; gap: 16px; padding: 32px 20px; }
+  .cursor { display: none; }
+  html, body { cursor: auto; }
+  a, button { cursor: pointer; }
+}
+</style>
+</head>
+<body>
+
+<!-- Loader -->
+<div class="loader" id="loader">
+  <div class="bar"></div>
+  <div class="label">Booting portfolio</div>
+</div>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+
+<!-- Nav -->
+<header class="nav" id="nav">
+  <a href="#top" class="logo">
+    <span class="mark">BA</span>
+    <span>BASIT ALI</span>
+  </a>
+  <nav class="menu">
+    <a href="#stats">Stats</a>
+    <a href="#gallery">Projects</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <a href="#contact" class="cta">Hire Me</a>
+</header>
+
+<!-- Hero -->
+<section class="hero" id="top">
+  <div class="number">04</div>
+  <div>
+    <div class="badge"><span class="pulse"></span> Data Scientist · AI Engineer</div>
+    <h1 class="name">
+      <span class="row"><span>BASIT</span></span>
+      <span class="row acid"><span>ALI.</span></span>
+    </h1>
+    <p class="sub">
+      Building <strong>intelligent systems</strong> that transform raw data into
+      production-ready ML solutions — surgical robotics, drug discovery, healthcare,
+      NASA-grade engineering.
+    </p>
+    <div class="ctas">
+      <a href="#gallery" class="btn-pill primary">View Projects <span>→</span></a>
+      <a href="#contact" class="btn-pill ghost">Get in Touch</a>
+    </div>
+    <div class="loc">Pakistan · Available worldwide</div>
+  </div>
+  <div class="hero-stage" id="stage">
+    <div class="ring"></div>
+    <div class="ring r2"></div>
+    <div class="meta">
+      <span>Status <b>Online</b></span>
+      <span>Stack <b>Python · XGBoost · Streamlit</b></span>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="stats" id="stats">
+  <div class="section-head">
+    <div>
+      <div class="num">01 · Career</div>
+      <h2 class="title reveal"><span>By the <em>numbers</em>.</span></h2>
+    </div>
+    <div class="tag">Stats updated<br />2026 · live</div>
+  </div>
+  <div class="grid">
+    <div class="stat">
+      <span class="num" data-count="8">0</span>
+      <span class="lbl">Projects shipped</span>
+      <span class="bg-num">08</span>
+    </div>
+    <div class="stat">
+      <span class="num" data-count="97.6" data-suffix="%" data-decimals="1">0</span>
+      <span class="lbl">Best accuracy</span>
+      <span class="bg-num">97.6</span>
+    </div>
+    <div class="stat">
+      <span class="num" data-count="6">0</span>
+      <span class="lbl">Models per project</span>
+      <span class="bg-num">06</span>
+    </div>
+    <div class="stat">
+      <span class="num" data-count="22">0</span>
+      <span class="lbl">Tools mastered</span>
+      <span class="bg-num">22</span>
+    </div>
+  </div>
+</section>
+
+<!-- Gallery -->
+<section class="gallery" id="gallery">
+  <div class="section-head">
+    <div>
+      <div class="num">02 · Portfolio</div>
+      <h2 class="title reveal"><span>Selected <em>work</em>.</span></h2>
+    </div>
+    <div class="tag">8 projects ·<br />all live</div>
+  </div>
+  <div class="grid">
+    <a class="card featured" href="https://github.com/basitali08/surgical-robotics-ml" target="_blank" rel="noopener">
+      <div class="img"></div>
+      <div class="accuracy">97.6% ACC</div>
+      <div class="meta"><span>Featured · ML</span><span>01</span></div>
+      <div class="arrow">↗</div>
+      <h3>Surgical Robotics ML</h3>
+      <div class="tags">
+        <span>XGBoost</span><span>SMOTE</span><span>Streamlit</span><span>Python</span>
+      </div>
+    </a>
+    <a class="card" href="https://github.com/basitali08/holistic-health-wellness" target="_blank" rel="noopener">
+      <div class="img"></div>
+      <div class="accuracy">94.6% ACC</div>
+      <div class="meta"><span>ML</span><span>02</span></div>
+      <div class="arrow">↗</div>
+      <h3>Holistic Health &amp; Wellness</h3>
+      <div class="tags"><span>XGBoost</span><span>SMOTE</span><span>Streamlit</span></div>
+    </a>
+    <a class="card" href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6852319" target="_blank" rel="noopener">
+      <div class="img"></div>
+      <div class="accuracy">AUC 0.84</div>
+      <div class="meta"><span>Research</span><span>03</span></div>
+      <div class="arrow">↗</div>
+      <h3>Neuron Receptor Binding</h3>
+      <div class="tags"><span>Drug Discovery</span><span>SSRN</span><span>Elsevier</span></div>
+    </a>
+    <a class="card" href="https://github.com/basitali08/nasa-rocket-analysis-" target="_blank" rel="noopener">
+      <div class="img"></div>
+      <div class="accuracy">92.9% ACC</div>
+      <div class="meta"><span>Engineering</span><span>04</span></div>
+      <div class="arrow">↗</div>
+      <h3>NASA Rocket Analysis</h3>
+      <div class="tags"><span>XGBoost</span><span>Streamlit</span><span>Python</span></div>
+    </a>
+    <a class="card" href="https://github.com/basitali08/cooperative-robotics-ml" target="_blank" rel="noopener">
+      <div class="img"></div>
+      <div class="accuracy">98.4% ACC</div>
+      <div class="meta"><span>Robotics</span><span>05</span></div>
+      <div class="arrow">↗</div>
+      <h3>Cooperative Robotics</h3>
+      <div class="tags"><span>Swarm</span><span>Multi-Agent</span><span>Streamlit</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- About -->
+<section class="about" id="about">
+  <div class="photo">
+    <img src="https://basitali08.github.io/portfolio/profile.jpg" alt="Basit Ali" />
+    <div class="tape">DS · AI · 2026</div>
+  </div>
+  <div class="text">
+    <h2 class="reveal"><span>Turning data <em>into</em> decisions.</span></h2>
+    <p>
+      <strong>Data Science graduate from Boston Institute of Analytics</strong> with deep expertise in
+      machine learning, artificial intelligence, and predictive modeling. I design and deploy end-to-end
+      ML systems — from synthetic data generation and feature engineering to interactive Streamlit
+      dashboards and model deployment.
+    </p>
+    <p>
+      My work spans <strong>surgical robotics</strong>, <strong>holistic health &amp; wellness</strong>,
+      <strong>neuroscience drug discovery</strong>, <strong>NASA rocket analysis</strong>, and
+      <strong>cooperative robotics</strong> — each project following a rigorous end-to-end pipeline with
+      6+ classification models, cross-validation, confusion matrices, ROC-AUC analysis, and feature
+      importance profiling.
+    </p>
+    <div class="quote">
+      "Consistently achieving 94–98% accuracy using XGBoost and ensemble methods with SMOTE-balanced datasets."
+    </div>
+    <div class="pubs">
+      <div class="phead">
+        <span>SSRN</span><span>Elsevier</span><span>July 2025</span>
+      </div>
+      <h3>Machine Learning Models for Predicting Neuron Receptor Binding</h3>
+      <p>
+        A benchmark study evaluating multi-class classification and regression approaches for predicting
+        drug binding affinity across 5 neuron receptors — Dopamine D2, Serotonin 5-HT2A, GABA-A, NMDA, and
+        Mu-Opioid. Achieved 47.7% multi-class accuracy (XGBoost), 76.4% binary accuracy for Serotonin
+        5-HT2A, and R²=0.49 for pIC50 regression.
+      </p>
+      <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6852319" target="_blank" rel="noopener">View on SSRN ↗</a>
+      <a href="https://doi.org/10.2139/ssrn.6852319" target="_blank" rel="noopener" style="background: transparent; color: var(--acid); border: 1px solid var(--line);">DOI ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="contact">
+  <h2 class="reveal"><span>Let's <em>build</em> something.</span></h2>
+  <a href="mailto:whoisbasit@gmail.com" class="email">whoisbasit@gmail.com</a>
+  <div class="ctas" style="justify-content: center;">
+    <a href="mailto:whoisbasit@gmail.com" class="btn-pill primary">Start a Project <span>→</span></a>
+    <a href="https://github.com/basitali08" target="_blank" rel="noopener" class="btn-pill ghost">View GitHub</a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div>© 2026 Basit Ali</div>
+  <div class="socials">
+    <a href="https://github.com/basitali08" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://linkedin.com/in/basit-ali-824851375" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://basitali08.github.io/portfolio/" target="_blank" rel="noopener">Portfolio</a>
+  </div>
+</footer>
+
+<!-- Marquee -->
+<div class="marquee" id="marquee">
+  <div class="track">
+    <span>Basit Ali</span><span>Data Scientist</span><span>AI Engineer</span>
+    <span>ML Pipelines</span><span>97.6% Accuracy</span><span>XGBoost</span>
+    <span>Streamlit</span><span>Drug Discovery</span><span>Robotics</span>
+    <span>NASA Analysis</span><span>SSRN Published</span>
+    <span>Basit Ali</span><span>Data Scientist</span><span>AI Engineer</span>
+    <span>ML Pipelines</span><span>97.6% Accuracy</span><span>XGBoost</span>
+    <span>Streamlit</span><span>Drug Discovery</span><span>Robotics</span>
+    <span>NASA Analysis</span><span>SSRN Published</span>
+  </div>
+</div>
+
+<!-- GSAP + ScrollTrigger + Lenis + Three.js -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.min.js"></script>
+
+<script>
+/* ─── Loader ─── */
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    document.getElementById("loader").classList.add("go");
+    setTimeout(() => {
+      const l = document.getElementById("loader");
+      l && l.remove();
+      init();
+    }, 1000);
+  }, 1500);
+});
+
+function init() {
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ─── Lenis smooth scroll ─── */
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smoothWheel: true,
+  });
+  function raf(t) { lenis.raf(t); requestAnimationFrame(raf); }
+  requestAnimationFrame(raf);
+  lenis.on("scroll", ScrollTrigger.update);
+  gsap.ticker.add((t) => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+
+  /* ─── Custom cursor ─── */
+  const cursor = document.getElementById("cursor");
+  let mx = 0, my = 0, cx = 0, cy = 0;
+  window.addEventListener("mousemove", (e) => { mx = e.clientX; my = e.clientY; });
+  function tickCursor() {
+    cx += (mx - cx) * 0.22;
+    cy += (my - cy) * 0.22;
+    cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%)`;
+    requestAnimationFrame(tickCursor);
+  }
+  tickCursor();
+  document.querySelectorAll("a, button, .card").forEach((el) => {
+    el.addEventListener("mouseenter", () => cursor.classList.add("hover"));
+    el.addEventListener("mouseleave", () => cursor.classList.remove("hover"));
+  });
+  document.addEventListener("mouseleave", () => cursor.classList.add("hide"));
+  document.addEventListener("mouseenter", () => cursor.classList.remove("hide"));
+
+  /* ─── Nav scrolled state ─── */
+  const nav = document.getElementById("nav");
+  ScrollTrigger.create({
+    start: 80,
+    end: 99999,
+    onUpdate: (self) => {
+      if (self.scroll() > 80) nav.classList.add("scrolled");
+      else nav.classList.remove("scrolled");
+    },
+  });
+
+  /* ─── Hero name reveal ─── */
+  gsap.to(".hero .name .row span", {
+    y: 0,
+    duration: 1.2,
+    ease: "expo.out",
+    stagger: 0.1,
+    delay: 0.2,
+  });
+  gsap.from(".hero .number", {
+    opacity: 0,
+    scale: 1.4,
+    duration: 1.4,
+    ease: "expo.out",
+    delay: 0.4,
+  });
+  gsap.from(".hero .badge, .hero .sub, .hero .ctas, .hero .loc", {
+    opacity: 0,
+    y: 30,
+    duration: 0.9,
+    ease: "expo.out",
+    stagger: 0.1,
+    delay: 0.8,
+  });
+
+  /* ─── Section title reveals ─── */
+  document.querySelectorAll(".title.reveal span").forEach((el) => {
+    gsap.to(el, {
+      y: 0,
+      duration: 1.2,
+      ease: "expo.out",
+      scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" },
+    });
+  });
+  document.querySelectorAll(".about .text h2.reveal span, .cta h2.reveal span").forEach((el) => {
+    gsap.to(el, {
+      y: 0,
+      duration: 1.2,
+      ease: "expo.out",
+      scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" },
+    });
+  });
+
+  /* ─── Stats count up ─── */
+  document.querySelectorAll(".stat").forEach((stat) => {
+    const num = stat.querySelector(".num");
+    const target = parseFloat(num.dataset.count);
+    const suffix = num.dataset.suffix || "";
+    const decimals = parseInt(num.dataset.decimals || "0");
+    const obj = { v: 0 };
+    ScrollTrigger.create({
+      trigger: stat,
+      start: "top 80%",
+      onEnter: () => {
+        gsap.to(obj, {
+          v: target,
+          duration: 1.8,
+          ease: "expo.out",
+          onUpdate: () => {
+            num.textContent = obj.v.toFixed(decimals) + suffix;
+          },
+        });
+      },
+    });
+  });
+
+  /* ─── Gallery card stagger ─── */
+  gsap.from(".gallery .card", {
+    y: 80,
+    opacity: 0,
+    duration: 1,
+    ease: "expo.out",
+    stagger: 0.1,
+    scrollTrigger: { trigger: ".gallery .grid", start: "top 80%" },
+  });
+
+  /* ─── About reveal ─── */
+  gsap.from(".about .photo", {
+    clipPath: "inset(100% 0 0 0)",
+    duration: 1.2,
+    ease: "expo.out",
+    scrollTrigger: { trigger: ".about", start: "top 70%" },
+  });
+  gsap.from(".about .text > *", {
+    y: 40,
+    opacity: 0,
+    duration: 0.8,
+    ease: "expo.out",
+    stagger: 0.1,
+    scrollTrigger: { trigger: ".about .text", start: "top 75%" },
+  });
+
+  /* ─── CTA ─── */
+  gsap.from(".cta > *", {
+    y: 60,
+    opacity: 0,
+    duration: 1,
+    ease: "expo.out",
+    stagger: 0.15,
+    scrollTrigger: { trigger: ".cta", start: "top 70%" },
+  });
+
+  /* ─── Marquee ─── */
+  setTimeout(() => document.getElementById("marquee").classList.add("show"), 2200);
+
+  /* ─── Three.js helmet ─── */
+  initThree();
+}
+
+function initThree() {
+  const stage = document.getElementById("stage");
+  if (!stage) return;
+  const w = stage.clientWidth;
+  const h = stage.clientHeight;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
+  camera.position.set(0, 0.3, 4.5);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
+  renderer.setSize(w, h);
+  renderer.setPixelRatio(Math.min(1.5, window.devicePixelRatio));
+  stage.insertBefore(renderer.domElement, stage.firstChild);
+
+  /* Helmet group */
+  const helmet = new THREE.Group();
+  scene.add(helmet);
+
+  /* Main head shell */
+  const headMat = new THREE.MeshPhysicalMaterial({
+    color: 0x18181a,
+    metalness: 0.85,
+    roughness: 0.2,
+    clearcoat: 1,
+    clearcoatRoughness: 0.1,
+  });
+  const head = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 64), headMat);
+  head.scale.set(1, 1.15, 1.05);
+  helmet.add(head);
+
+  /* Visor — acid green slit */
+  const visorMat = new THREE.MeshPhysicalMaterial({
+    color: 0xd2ff00,
+    emissive: 0xd2ff00,
+    emissiveIntensity: 1.4,
+    metalness: 0.9,
+    roughness: 0.1,
+    transmission: 0.2,
+  });
+  const visor = new THREE.Mesh(new THREE.SphereGeometry(0.98, 64, 64, 0, Math.PI, Math.PI * 0.35, Math.PI * 0.3), visorMat);
+  visor.scale.set(1.02, 1.18, 1.08);
+  visor.position.z = 0.02;
+  helmet.add(visor);
+
+  /* Top stripe */
+  const stripeMat = new THREE.MeshBasicMaterial({ color: 0xd2ff00 });
+  const stripe = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.04, 1.3), stripeMat);
+  stripe.position.set(0, 1.0, 0.05);
+  helmet.add(stripe);
+
+  /* Side fins */
+  for (let s = -1; s <= 1; s += 2) {
+    const fin = new THREE.Mesh(
+      new THREE.BoxGeometry(0.04, 0.6, 0.5),
+      new THREE.MeshPhysicalMaterial({ color: 0x0a0a0b, metalness: 0.9, roughness: 0.2 })
+    );
+    fin.position.set(s * 0.96, 0.05, 0.1);
+    fin.rotation.z = s * 0.15;
+    helmet.add(fin);
+  }
+
+  /* Top fin */
+  const topFin = new THREE.Mesh(
+    new THREE.BoxGeometry(0.3, 0.06, 0.9),
+    new THREE.MeshPhysicalMaterial({ color: 0x0a0a0b, metalness: 0.9, roughness: 0.2 })
+  );
+  topFin.position.set(0, 1.1, -0.2);
+  helmet.add(topFin);
+
+  /* Chin */
+  const chin = new THREE.Mesh(
+    new THREE.SphereGeometry(0.4, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2),
+    new THREE.MeshPhysicalMaterial({ color: 0x18181a, metalness: 0.8, roughness: 0.3 })
+  );
+  chin.position.set(0, -0.8, 0.3);
+  chin.rotation.x = Math.PI;
+  helmet.add(chin);
+
+  /* Lights */
+  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+  const k1 = new THREE.PointLight(0xd2ff00, 1.5, 8);
+  k1.position.set(2, 2, 2);
+  scene.add(k1);
+  const k2 = new THREE.PointLight(0xffffff, 0.8, 8);
+  k2.position.set(-2, -1, 2);
+  scene.add(k2);
+  const k3 = new THREE.PointLight(0xd2ff00, 0.6, 6);
+  k3.position.set(0, 0, 3);
+  scene.add(k3);
+
+  /* Mouse parallax */
+  const mouse = { x: 0, y: 0 };
+  stage.addEventListener("mousemove", (e) => {
+    const r = stage.getBoundingClientRect();
+    mouse.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+    mouse.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+  });
+
+  /* Animate */
+  let raf;
+  const clock = new THREE.Clock();
+  function animate() {
+    const t = clock.getElapsedTime();
+    helmet.rotation.y = t * 0.3 + mouse.x * 0.5;
+    helmet.rotation.x = mouse.y * 0.3 + Math.sin(t * 0.5) * 0.05;
+    helmet.position.y = Math.sin(t * 0.8) * 0.06;
+    /* visor pulse */
+    visor.material.emissiveIntensity = 1.0 + Math.sin(t * 2) * 0.4;
+    renderer.render(scene, camera);
+    raf = requestAnimationFrame(animate);
+  }
+  animate();
+
+  /* Resize */
+  const ro = new ResizeObserver(() => {
+    const nw = stage.clientWidth;
+    const nh = stage.clientHeight;
+    if (nw === 0 || nh === 0) return;
+    camera.aspect = nw / nh;
+    camera.updateProjectionMatrix();
+    renderer.setSize(nw, nh);
+  });
+  ro.observe(stage);
+}
+</script>
+</body>
+</html>
