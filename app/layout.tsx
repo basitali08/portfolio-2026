@@ -20,7 +20,6 @@ export const metadata: Metadata = {
   keywords: [
     profile.name,
     "portfolio",
-    "3D portfolio",
     ...profile.skills.map((s) => s.name),
   ],
   authors: [{ name: profile.name, url: profile.links.linkedin }],

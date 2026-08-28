@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { profile, type Skill } from "@/lib/data";
-import { SkillSphereClient as SkillSphere } from "@/components/three/SkillSphereClient";
 import { Parallax } from "@/components/ui/Parallax";
 import { cn } from "@/lib/utils";
 
@@ -65,36 +64,33 @@ export function Skills() {
           ))}
         </div>
 
-        <div className="mt-10 grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
-          <SkillSphere skills={filtered} />
-          <div className="grid gap-3 sm:grid-cols-2">
-            {filtered.map((s, i) => (
-              <motion.div
-                key={s.name}
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.4, delay: i * 0.04 }}
-                className="glass rounded-xl p-4"
-              >
-                <div className="flex items-baseline justify-between">
-                  <span className="text-sm text-white/90">{s.name}</span>
-                  <span className="font-mono text-[10px] text-white/40">
-                    {s.level}
-                  </span>
-                </div>
-                <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/5">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${s.level}%` }}
-                    viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                    className="h-full rounded-full bg-gradient-to-r from-neon-cyan via-neon-violet to-neon-pink"
-                  />
-                </div>
-              </motion.div>
-            ))}
-          </div>
+        <div className="mt-10 grid gap-3 sm:grid-cols-2">
+          {filtered.map((s, i) => (
+            <motion.div
+              key={s.name}
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.4, delay: i * 0.04 }}
+              className="glass rounded-xl p-4"
+            >
+              <div className="flex items-baseline justify-between">
+                <span className="text-sm text-white/90">{s.name}</span>
+                <span className="font-mono text-[10px] text-white/40">
+                  {s.level}
+                </span>
+              </div>
+              <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/5">
+                <motion.div
+                  initial={{ width: 0 }}
+                  whileInView={{ width: `${s.level}%` }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                  className="h-full rounded-full bg-gradient-to-r from-neon-cyan via-neon-violet to-neon-pink"
+                />
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

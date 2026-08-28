@@ -7,17 +7,14 @@ import { Skills } from "@/components/sections/Skills";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/ui/Footer";
-import { DynamicScene, DynamicScrollJourney } from "@/components/ui/DynamicImports";
 
 export default function Home() {
   return (
     <>
-      <DynamicScene />
       <Hero />
       <About />
       <Experience />
       <Projects />
-      <DynamicScrollJourney />
       <Research />
       <Skills />
       <Testimonials />
