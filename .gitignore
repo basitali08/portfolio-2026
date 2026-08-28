@@ -45,3 +45,6 @@ dev.out.log
 
 # typescript
 *.tsbuildinfo
+
+.vercel
+.env*
